@@ -8,13 +8,13 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import VIDEO_TUBE from "@/lib/apihandler"
 export default function SignUpForm() {
   // 1. Define your form.
   const form = useForm<signUpFormValidationType>({
@@ -27,13 +27,15 @@ export default function SignUpForm() {
       confirmPassword:""
     },
   })
-
-  // 2. Define a submit handler.
-  function onSubmit(values: signUpFormValidationType ) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+ const onSubmit = async (data:signUpFormValidationType)=>{
+  try {
+    console.log(VIDEO_TUBE)
+   const res = await VIDEO_TUBE.post('/auth/signup', data) 
+   console.log(res)
+  } catch (error) {
+   console.log(error) 
   }
+ }
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
