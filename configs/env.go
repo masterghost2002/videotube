@@ -14,7 +14,7 @@ type Config struct {
 	DBAddress  string
 	DBName     string
 	JWTSecret  string
-	CyrptSalt  string
+	CryptSalt  string
 }
 
 var ENVS = initConfig()
@@ -29,7 +29,7 @@ func initConfig() Config {
 		DBAddress:  getEnv("DB_HOST", "localhost"),
 		DBName:     getEnv("DB_NAME", "test"),
 		JWTSecret:  getEnv("JWT_SECRET", "secret-key"),
-		CyrptSalt:  getEnv("CRYPT_SALT", "salt"),
+		CryptSalt:  getEnv("CRYPT_SALT", "salt"),
 	}
 }
 func getEnv(key, fallback string) string {
