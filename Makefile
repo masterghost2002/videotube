@@ -3,7 +3,7 @@
 
 # Define variables
 UI_DIR := ui
-GO_SERVER := main.go  # Replace with the entry point of your Go server
+GO_SERVER := cmd/server/main.go  # Replace with the entry point of your Go server
 
 # Define targets for the Next.js app
 .PHONY: install-ui
