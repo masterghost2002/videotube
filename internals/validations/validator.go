@@ -16,6 +16,10 @@ type UserSignUpFormData struct {
 	Username string `json:"username" validate:"required,username"`
 	Password string `json:"password" validate:"required,password"`
 }
+type UserSignInFormData struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,password"`
+}
 
 var Validate *validator.Validate
 

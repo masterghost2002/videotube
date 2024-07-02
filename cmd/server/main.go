@@ -23,6 +23,6 @@ func main() {
 	// auth router group
 	authRouter := app.Group("/auth")
 	authRouter.Post("/signup", handlers.SignUp)
-
+	authRouter.Post("/signin", handlers.SignIn)
 	app.Listen(":5000")
 }
