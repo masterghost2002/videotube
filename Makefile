@@ -36,6 +36,15 @@ clean-ui:
 	@echo "Cleaning up in $(UI_DIR)..."
 	rm -rf $(UI_DIR)/node_modules $(UI_DIR)/.next
 
+.PHONY: all start-db
+
+# Default target
+all: start-db
+
+# Target to start the PostgreSQL container using the scripts/Makefile
+start-db:
+	@$(MAKE) -C scripts/docker
+
 # Define targets for the Go server
 .PHONY: start
 start:
