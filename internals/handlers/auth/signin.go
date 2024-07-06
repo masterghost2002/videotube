@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"context"
-	"database/sql"
-	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/masterghost2002/videotube/internals/database"
@@ -24,29 +22,36 @@ func SignIn(c *fiber.Ctx) error {
 		})
 	}
 	user, err := database.Storage.GetUserByEmail(context.Background(), userData.Email)
-	fmt.Println(err)
-	if err == sql.ErrNoRows {
-		return c.Status(404).JSON(fiber.Map{
-			"error": "No user found",
-		})
+	if err != nil {
+		return err
 	}
-	fmt.Println(user)
 	isPasswordMatched := utils.ChechString(user.Password, userData.Password)
 	if !isPasswordMatched {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Incorrect password",
-		})
+		return c.Status(fiber.StatusUnauthorized).JSON(
+			&types.Response{
+				Error:       true,
+				Message:     "Incorrect Password",
+				ErrorFields: []string{"Password"},
+				Data:        nil,
+			},
+		)
 	}
 
-	return c.Status(200).JSON(fiber.Map{
-		"user": &types.UserResponse{
-			ID:         user.ID,
-			Email:      user.Email,
-			Username:   user.Username,
-			ChannelID:  user.ChannelID,
-			CreatedAt:  user.CreatedAt,
-			UpdatedAt:  user.UpdatedAt,
-			Profileurl: user.Profileurl,
+	return c.Status(200).JSON(
+		&types.Response{
+			Error:       false,
+			Message:     "Sign In  success",
+			ErrorFields: nil,
+			Data: &types.UserResponse{
+
+				ID:         user.ID,
+				Email:      user.Email,
+				Username:   user.Username,
+				ChannelID:  user.ChannelID,
+				CreatedAt:  user.CreatedAt,
+				UpdatedAt:  user.UpdatedAt,
+				Profileurl: user.Profileurl,
+			},
 		},
-	})
+	)
 }

@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/lib/pq"
 	"github.com/masterghost2002/videotube/internals/database"
 	jwt "github.com/masterghost2002/videotube/internals/token"
 	"github.com/masterghost2002/videotube/internals/validations"
@@ -20,25 +19,13 @@ func SignUp(c *fiber.Ctx) error {
 	}
 
 	if err := validations.Validate.Struct(userData); err != nil {
-		errors := utils.FormatValidationErrors(err)
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": errors,
-		})
+		return err
 	}
 	hashPassword := utils.HashString(userData.Password)
 	userParams := database.CreateUserParams{FullName: userData.FullName, Email: userData.Email, Username: userData.Username, Password: hashPassword}
 	result, err := database.Storage.CreateUser(context.Background(), userParams)
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok {
-			if pqErr.Code == "23505" {
-				return c.Status(fiber.ErrConflict.Code).JSON(fiber.Map{
-					"error": "User already exist",
-				})
-			}
-			return c.Status(fiber.ErrBadGateway.Code).JSON(fiber.Map{
-				"error": pqErr.Message,
-			})
-		}
+		return err
 	}
 	token, err := jwt.GenerateJWT(jwt.UserPayload{
 		FullName: result.FullName,
