@@ -1,13 +1,15 @@
 package handlers
 
 import (
+	"context"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/masterghost2002/videotube/internals/models"
-	repository "github.com/masterghost2002/videotube/internals/repository/database"
+	"github.com/lib/pq"
+	"github.com/masterghost2002/videotube/internals/database"
 	jwt "github.com/masterghost2002/videotube/internals/token"
 	"github.com/masterghost2002/videotube/internals/validations"
+	"github.com/masterghost2002/videotube/types"
 	"github.com/masterghost2002/videotube/utils"
 )
 
@@ -24,18 +26,26 @@ func SignUp(c *fiber.Ctx) error {
 		})
 	}
 	hashPassword := utils.HashString(userData.Password)
-	user := models.User{FullName: userData.FullName, Email: userData.Email, Username: userData.Username, Password: hashPassword}
-	if err := repository.CreateUser(user); err != nil {
-		return c.Status(424).JSON(fiber.Map{
-			"error": err,
-		})
+	userParams := database.CreateUserParams{FullName: userData.FullName, Email: userData.Email, Username: userData.Username, Password: hashPassword}
+	result, err := database.Storage.CreateUser(context.Background(), userParams)
+	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok {
+			if pqErr.Code == "23505" {
+				return c.Status(fiber.ErrConflict.Code).JSON(fiber.Map{
+					"error": "User already exist",
+				})
+			}
+			return c.Status(fiber.ErrBadGateway.Code).JSON(fiber.Map{
+				"error": pqErr.Message,
+			})
+		}
 	}
 	token, err := jwt.GenerateJWT(jwt.UserPayload{
-		FullName: userData.FullName,
-		Email:    userData.Email,
+		FullName: result.FullName,
+		Email:    result.Email,
 	})
 	if err != nil {
-		c.SendStatus(201)
+		c.SendStatus(500)
 	}
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
@@ -43,5 +53,15 @@ func SignUp(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(124 * time.Hour),
 		HTTPOnly: true,
 	})
-	return c.SendStatus(201)
+	return c.Status(201).JSON(fiber.Map{
+		"user": &types.UserResponse{
+			FullName:   result.FullName,
+			Email:      result.Email,
+			ChannelID:  result.ChannelID,
+			Profileurl: result.Profileurl,
+			Username:   result.Username,
+			CreatedAt:  result.CreatedAt,
+			UpdatedAt:  result.UpdatedAt,
+		},
+	})
 }

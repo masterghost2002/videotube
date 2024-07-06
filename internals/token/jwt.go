@@ -13,7 +13,7 @@ var jwtKey = []byte(config.ENVS.JWTSecret)
 
 type UserPayload struct {
 	jwt.StandardClaims
-	FullName string `json:"firstName"`
+	FullName string `json:"full_name"`
 	Email    string `json:"email"`
 }
 

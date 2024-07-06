@@ -3,12 +3,12 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/masterghost2002/videotube/internals/database"
 	handlers "github.com/masterghost2002/videotube/internals/handlers/auth"
-	"github.com/masterghost2002/videotube/internals/registry"
 )
 
 func main() {
-	err := registry.StorageInit()
+	err := database.InitDB()
 	if err != nil {
 		panic(err)
 	}
