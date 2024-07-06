@@ -40,8 +40,11 @@ func SignUp(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(124 * time.Hour),
 		HTTPOnly: true,
 	})
-	return c.Status(201).JSON(fiber.Map{
-		"user": &types.UserResponse{
+	return c.Status(201).JSON(&types.Response{
+		Error:       false,
+		Message:     "User registration successfull",
+		ErrorFields: nil,
+		Data: &types.UserResponse{
 			FullName:   result.FullName,
 			Email:      result.Email,
 			ChannelID:  result.ChannelID,
