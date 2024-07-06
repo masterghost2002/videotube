@@ -16,10 +16,7 @@ func SignIn(c *fiber.Ctx) error {
 		return err
 	}
 	if err := validations.Validate.Struct(userData); err != nil {
-		errors := utils.FormatValidationErrors(err)
-		return c.Status(424).JSON(fiber.Map{
-			"eror": errors,
-		})
+		return err
 	}
 	user, err := database.Storage.GetUserByEmail(context.Background(), userData.Email)
 	if err != nil {
@@ -43,7 +40,6 @@ func SignIn(c *fiber.Ctx) error {
 			Message:     "Sign In  success",
 			ErrorFields: nil,
 			Data: &types.UserResponse{
-
 				ID:         user.ID,
 				Email:      user.Email,
 				Username:   user.Username,
