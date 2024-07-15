@@ -1,5 +1,3 @@
-
-
 -- Migration file for PostgreSQL database
 
 -- Enable extension for auto-incrementing primary keys
@@ -12,7 +10,7 @@ CREATE TABLE users (
   full_name VARCHAR NOT NULL,
   email VARCHAR NOT NULL,
   password VARCHAR NOT NULL,
-  profileUrl VARCHAR,
+  profile_url VARCHAR,
   channel_id BIGINT UNIQUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -27,7 +25,7 @@ CREATE TABLE channel (
   user_id BIGINT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
   name VARCHAR(64) NOT NULL,
   logo VARCHAR,
-  subscriberCount BIGINT DEFAULT 0,
+  subscriber_count BIGINT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

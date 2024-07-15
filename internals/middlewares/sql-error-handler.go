@@ -10,7 +10,6 @@ import (
 func SQLErrorHandler(c *fiber.Ctx) error {
 	// first the handler functions will work
 	err := c.Next() // handler functions return error
-
 	// handling of error
 	if err == nil {
 		return nil

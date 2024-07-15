@@ -1,22 +1,22 @@
 -- users.sql
 -- name: CreateUser :one
-INSERT INTO users (username, full_name, email, password, profileUrl, channel_id)
+INSERT INTO users (username, full_name, email, password, profile_url, channel_id)
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, username, full_name, email, password, profileUrl, channel_id, created_at, updated_at;
+RETURNING id, username, full_name, email, password, profile_url, channel_id, created_at, updated_at;
 
 -- name: GetUserById :one
-SELECT id, username, full_name, email, password, profileUrl, channel_id, created_at, updated_at
+SELECT id, username, full_name, email, password, profile_url, channel_id, created_at, updated_at
 FROM users
 WHERE id = $1;
 
 -- name: GetUserByEmail :one
-SELECT id, username, full_name, email, password, profileUrl, channel_id, created_at, updated_at
+SELECT id, username, full_name, email, password, profile_url, channel_id, created_at, updated_at
 FROM users
 WHERE email = $1;
 
 -- name: UpdateUser :exec
 UPDATE users
-SET username = $2, full_name = $3, email = $4, password = $5, profileUrl = $6, updated_at = CURRENT_TIMESTAMP
+SET username = $2, full_name = $3, email = $4, password = $5, profile_url = $6, updated_at = CURRENT_TIMESTAMP
 WHERE id = $1;
 
 -- name: DeleteUser :exec
@@ -25,22 +25,22 @@ WHERE id = $1;
 
 -- channel.sql
 -- name: CreateChannel :one
-INSERT INTO channel (user_id, name, logo, subscriberCount)
+INSERT INTO channel (user_id, name, logo, subscriber_count)
 VALUES ($1, $2, $3, $4)
-RETURNING id, user_id, name, logo, subscriberCount, created_at, updated_at;
+RETURNING id, user_id, name, logo, subscriber_count, created_at, updated_at;
 
 -- name: GetChannelById :one
-SELECT id, user_id, name, logo, subscriberCount, created_at, updated_at
+SELECT id, user_id, name, logo, subscriber_count, created_at, updated_at
 FROM channel
 WHERE id = $1;
 
 -- name: GetChannelByUserId :one
-SELECT id, user_id, name, logo, subscriberCount, created_at, updated_at
+SELECT id, user_id, name, logo, subscriber_count, created_at, updated_at
 FROM channel
 WHERE user_id = $1;
 -- name: UpdateChannel :exec
 UPDATE channel
-SET name = $2, logo = $3, subscriberCount = $4, updated_at = CURRENT_TIMESTAMP
+SET name = $2, logo = $3, subscriber_count = $4, updated_at = CURRENT_TIMESTAMP
 WHERE id = $1;
 
 -- name: DeleteChannel :exec
