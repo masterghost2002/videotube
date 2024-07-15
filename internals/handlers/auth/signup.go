@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,7 +23,7 @@ func SignUp(c *fiber.Ctx) error {
 		return err
 	}
 	hashPassword := utils.HashString(userData.Password)
-	userParams := database.CreateUserParams{FullName: userData.FullName, Email: userData.Email, Username: userData.Username, Password: hashPassword}
+	userParams := database.CreateUserParams{FullName: userData.FullName, Email: userData.Email, Username: userData.Username, Password: hashPassword, ProfileUrl: sql.NullString{}}
 	result, err := database.Storage.CreateUser(context.Background(), userParams)
 	if err != nil {
 		return err
@@ -48,7 +49,7 @@ func SignUp(c *fiber.Ctx) error {
 			FullName:   result.FullName,
 			Email:      result.Email,
 			ChannelID:  result.ChannelID,
-			Profileurl: result.Profileurl,
+			Profileurl: result.ProfileUrl,
 			Username:   result.Username,
 			CreatedAt:  result.CreatedAt,
 			UpdatedAt:  result.UpdatedAt,

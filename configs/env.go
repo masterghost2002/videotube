@@ -15,12 +15,14 @@ type Config struct {
 	DBName     string
 	JWTSecret  string
 	CryptSalt  string
+	SSLMODE    string
+	CRT_PATH   string
 }
 
 var ENVS = initConfig()
 
 func initConfig() Config {
-	godotenv.Load(".env")
+	godotenv.Load("/home/rakesh/Downloads/videotube/.env")
 	return Config{
 		PublicHost: getEnv("PUBLIC_HOST", "http://localhost"),
 		DBPort:     getEnv("DB_PORT", "5432"),
@@ -30,6 +32,8 @@ func initConfig() Config {
 		DBName:     getEnv("DB_NAME", "test"),
 		JWTSecret:  getEnv("JWT_SECRET", "secret-key"),
 		CryptSalt:  getEnv("CRYPT_SALT", "salt"),
+		SSLMODE:    getEnv("SSLMODE", "disable"),
+		CRT_PATH:   getEnv("CRT_PATH", "./ca.crt"),
 	}
 }
 func getEnv(key, fallback string) string {

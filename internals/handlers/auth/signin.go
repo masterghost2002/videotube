@@ -46,7 +46,7 @@ func SignIn(c *fiber.Ctx) error {
 				ChannelID:  user.ChannelID,
 				CreatedAt:  user.CreatedAt,
 				UpdatedAt:  user.UpdatedAt,
-				Profileurl: user.Profileurl,
+				Profileurl: user.ProfileUrl,
 			},
 		},
 	)

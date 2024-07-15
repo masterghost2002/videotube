@@ -35,7 +35,7 @@ func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	}
 }
 func InitDB() error {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", config.ENVS.DBAddress, config.ENVS.DBUser, config.ENVS.DBPassword, config.ENVS.DBName, config.ENVS.DBPort)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s sslrootcert=%s ", config.ENVS.DBAddress, config.ENVS.DBUser, config.ENVS.DBPassword, config.ENVS.DBName, config.ENVS.DBPort, config.ENVS.SSLMODE, config.ENVS.CRT_PATH)
 	conn, err := sql.Open("postgres", dsn)
 	if err != nil{
 		return err
@@ -52,4 +52,3 @@ func InitDB() error {
 func GetDB() *Queries{
 	return Storage;
 }
-
