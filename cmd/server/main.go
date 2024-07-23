@@ -4,7 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/masterghost2002/videotube/internals/database"
-	handlers "github.com/masterghost2002/videotube/internals/handlers/auth"
+	authhandlers "github.com/masterghost2002/videotube/internals/handlers/auth"
+	channelhandlers "github.com/masterghost2002/videotube/internals/handlers/channel"
 	"github.com/masterghost2002/videotube/internals/middlewares"
 )
 
@@ -25,7 +26,12 @@ func main() {
 
 	// auth router group
 	authRouter := app.Group("/auth")
-	authRouter.Post("/signup", handlers.SignUp)
-	authRouter.Post("/signin", handlers.SignIn)
+	authRouter.Post("/signup", authhandlers.SignUp)
+	authRouter.Post("/signin", authhandlers.SignIn)
+
+	//channels router group
+	channelRouter := app.Group("/channel", middlewares.ValidateUser)
+
+	channelRouter.Post("/create-channel", channelhandlers.CreateChannel)
 	app.Listen(":5000")
 }
