@@ -22,7 +22,7 @@ type Config struct {
 var ENVS = initConfig()
 
 func initConfig() Config {
-	godotenv.Load("/home/rakesh/Downloads/videotube/.env")
+	godotenv.Load("/home/rakesh/data/codespace/videotube/.env")
 	return Config{
 		PublicHost: getEnv("PUBLIC_HOST", "http://localhost"),
 		DBPort:     getEnv("DB_PORT", "5432"),

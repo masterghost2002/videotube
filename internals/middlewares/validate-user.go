@@ -34,6 +34,6 @@ func ValidateUser(c *fiber.Ctx) error {
 		return err
 	}
 	c.Locals("logged_user", userFromDB)
-	c.Next()
-	return nil
+	nextErr := c.Next()
+	return nextErr
 }
