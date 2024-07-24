@@ -17,7 +17,7 @@ RETURNING id, user_id, name, logo, subscriber_count, created_at, updated_at
 `
 
 type CreateChannelParams struct {
-	UserID          sql.NullInt64
+	UserID          int64
 	Name            string
 	Logo            sql.NullString
 	SubscriberCount sql.NullInt64
@@ -363,7 +363,7 @@ FROM channel
 WHERE user_id = $1
 `
 
-func (q *Queries) GetChannelByUserId(ctx context.Context, userID sql.NullInt64) (Channel, error) {
+func (q *Queries) GetChannelByUserId(ctx context.Context, userID int64) (Channel, error) {
 	row := q.db.QueryRowContext(ctx, getChannelByUserId, userID)
 	var i Channel
 	err := row.Scan(
@@ -376,6 +376,42 @@ func (q *Queries) GetChannelByUserId(ctx context.Context, userID sql.NullInt64) 
 		&i.UpdatedAt,
 	)
 	return i, err
+}
+
+const getChannels = `-- name: GetChannels :many
+SELECT id, user_id, name, logo, subscriber_count, created_at, updated_at
+FROM channel
+`
+
+func (q *Queries) GetChannels(ctx context.Context) ([]Channel, error) {
+	rows, err := q.db.QueryContext(ctx, getChannels)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Channel
+	for rows.Next() {
+		var i Channel
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.Logo,
+			&i.SubscriberCount,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getCommentById = `-- name: GetCommentById :one

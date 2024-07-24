@@ -42,7 +42,9 @@ WHERE user_id = $1;
 UPDATE channel
 SET name = $2, logo = $3, subscriber_count = $4, updated_at = CURRENT_TIMESTAMP
 WHERE id = $1;
-
+-- name: GetChannels :many
+SELECT id, user_id, name, logo, subscriber_count, created_at, updated_at
+FROM channel;
 -- name: DeleteChannel :exec
 DELETE FROM channel
 WHERE id = $1;

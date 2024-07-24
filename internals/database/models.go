@@ -140,7 +140,7 @@ func (ns NullVideostatus) Value() (driver.Value, error) {
 
 type Channel struct {
 	ID              int64
-	UserID          sql.NullInt64
+	UserID          int64
 	Name            string
 	Logo            sql.NullString
 	SubscriberCount sql.NullInt64

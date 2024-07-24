@@ -33,5 +33,7 @@ func main() {
 	channelRouter := app.Group("/channel", middlewares.ValidateUser)
 
 	channelRouter.Post("/create-channel", channelhandlers.CreateChannel)
+	channelRouter.Get("/get-channels", channelhandlers.GetChannels)
+	channelRouter.Delete("/:id", channelhandlers.DeleteChannel)
 	app.Listen(":5000")
 }

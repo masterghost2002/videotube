@@ -31,7 +31,8 @@ func CreateChannel(c *fiber.Ctx) error {
 	}
 
 	createChannelParams := database.CreateChannelParams{
-		Name: channelData.Name,
+		Name:   channelData.Name,
+		UserID: user.ID,
 	}
 	result, err := database.Storage.CreateChannel(context.Background(), createChannelParams)
 

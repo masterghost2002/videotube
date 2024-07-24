@@ -1,3 +1,4 @@
+
 -- Migration file for PostgreSQL database
 
 -- Enable extension for auto-incrementing primary keys
@@ -6,9 +7,9 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Create users table
 CREATE TABLE users (
   id BIGSERIAL PRIMARY KEY,
-  username VARCHAR NOT NULL,
+  username VARCHAR NOT NULL UNIQUE,
   full_name VARCHAR NOT NULL,
-  email VARCHAR NOT NULL,
+  email VARCHAR NOT NULL UNIQUE,
   password VARCHAR NOT NULL,
   profile_url VARCHAR,
   channel_id BIGINT UNIQUE,
@@ -22,7 +23,7 @@ CREATE INDEX idx_users_email ON users(email);
 -- Create channel table
 CREATE TABLE channel (
   id BIGSERIAL PRIMARY KEY,
-  user_id BIGINT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  user_id BIGINT UNIQUE REFERENCES users(id) ON DELETE CASCADE NOT NULL,
   name VARCHAR(64) NOT NULL,
   logo VARCHAR,
   subscriber_count BIGINT DEFAULT 0,
